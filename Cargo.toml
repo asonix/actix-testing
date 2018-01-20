@@ -1,0 +1,9 @@
+[package]
+name = "hello-actix"
+version = "0.1.0"
+authors = ["Riley Trautman <rileyt@spiceworks.com>"]
+
+[dependencies]
+actix = "0.4"
+actix-web = "0.3"
+futures = "0.1"
