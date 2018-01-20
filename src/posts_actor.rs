@@ -26,19 +26,19 @@ impl Handler<NewPost> for Posts {
     type Result = Result<Id, ()>;
 
     fn handle(&mut self, new_post: NewPost, _: &mut Context<Self>) -> Self::Result {
-        let NewPost {
-            author,
-            content,
-        } = new_post;
+        let NewPost { author, content } = new_post;
 
         let id = Id(self.post_id);
         self.post_id += 1;
 
-        self.posts.insert(id, Post {
-            id: id,
-            author: author,
-            content: content,
-        });
+        self.posts.insert(
+            id,
+            Post {
+                id: id,
+                author: author,
+                content: content,
+            },
+        );
 
         Ok(id)
     }

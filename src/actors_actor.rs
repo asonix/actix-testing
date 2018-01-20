@@ -45,10 +45,7 @@ impl Handler<RequestAddress> for Actors {
     fn handle(&mut self, request_address: RequestAddress, _: &mut Context<Self>) -> Self::Result {
         let RequestAddress { id } = request_address;
 
-        let address = self.actors
-            .get(&id)
-            .ok_or(MissingAddress)?
-            .clone();
+        let address = self.actors.get(&id).ok_or(MissingAddress)?.clone();
 
         Ok(address)
     }

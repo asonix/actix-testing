@@ -63,8 +63,7 @@ fn main() {
                 .prefix("/what")
                 .resource("/", |r| r.method(Method::GET).f(app2)),
         ]
-    })
-    .bind("127.0.0.1:8080")
-    .unwrap()
-    .run();
+    }).bind("127.0.0.1:8080")
+        .unwrap()
+        .run();
 }

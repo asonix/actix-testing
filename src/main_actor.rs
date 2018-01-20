@@ -86,12 +86,19 @@ impl Handler<NewPost> for MyActor {
     type Result = Result<Id, ()>;
 
     fn handle(&mut self, new_post: NewPost, _: &mut Context<Self>) -> Self::Result {
-        let id = self.posts_addr.call_fut(new_post.clone()).wait().map_err(|_| ())??;
+        let id = self.posts_addr
+            .call_fut(new_post.clone())
+            .wait()
+            .map_err(|_| ())??;
 
         self.posts.push(id);
 
         for id in &self.followers {
-            let actor = self.actors_addr.call_fut(RequestAddress { id: id.clone() }).map_err(|_| ()).wait()?.map_err(|_| ())?;
+            let actor = self.actors_addr
+                .call_fut(RequestAddress { id: id.clone() })
+                .map_err(|_| ())
+                .wait()?
+                .map_err(|_| ())?;
             actor.send(new_post.clone());
         }
 
@@ -103,9 +110,17 @@ impl Handler<Follow> for MyActor {
     type Result = Result<(), ()>;
 
     fn handle(&mut self, follow: Follow, _: &mut Context<Self>) -> Self::Result {
-        let actor = self.actors_addr.call_fut(RequestAddress { id: follow.id }).map_err(|_| ()).wait()?.map_err(|_| ())?;
+        let actor = self.actors_addr
+            .call_fut(RequestAddress { id: follow.id })
+            .map_err(|_| ())
+            .wait()?
+            .map_err(|_| ())?;
 
-        actor.call_fut(FollowRequest { id: self.id }).map_err(|_| ()).wait()?.map_err(|_| ())?;
+        actor
+            .call_fut(FollowRequest { id: self.id })
+            .map_err(|_| ())
+            .wait()?
+            .map_err(|_| ())?;
         self.awaiting.insert(follow.id);
 
         Ok(())
